@@ -25,7 +25,7 @@ class TailwindPrefixBot {
     constructor(options = {}) {
         // Validate and set options
         this.validateOptions(options);
-        
+
         this.prefix = options.prefix || 'tw-';
         this.sourceDir = path.resolve(options.sourceDir || './');
         this.filePatterns = options.filePatterns || [
@@ -33,18 +33,18 @@ class TailwindPrefixBot {
             '**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.vue', '**/*.svelte'
         ];
         this.excludePatterns = options.excludePatterns || [
-            'node_modules/**', 'vendor/**', '.git/**', 'dist/**', 'build/**', 
+            'node_modules/**', 'vendor/**', '.git/**', 'dist/**', 'build/**',
             '**/*.min.*', '**/*.backup', '**/.*'
         ];
         this.ignoreClasses = options.ignoreClasses || [
-            'swiper', 'swiper-wrapper', 'swiper-slide', 'container', 'row', 'col'
+            'swiper', 'swiper-wrapper', 'swiper-slide'
         ];
         this.backup = options.backup !== false;
         this.dryRun = options.dryRun || false;
         this.logLevel = options.logLevel || 'info';
         this.atomic = options.atomic !== false;
         this.backupDir = options.backupDir || path.join(this.sourceDir, '.tailwind-prefix-backups');
-        
+
         // Internal state
         this.stats = {
             filesProcessed: 0,
@@ -54,7 +54,7 @@ class TailwindPrefixBot {
             startTime: null,
             endTime: null
         };
-        
+
         // Enhanced regex patterns for better class detection
         this.patterns = {
             // HTML class attributes (supports multi-line)
@@ -101,7 +101,7 @@ class TailwindPrefixBot {
     log(level, message, ...args) {
         const levels = { silent: 0, error: 1, warn: 2, info: 3, debug: 4 };
         const currentLevel = levels[this.logLevel] || 3;
-        
+
         if (levels[level] <= currentLevel) {
             const timestamp = new Date().toISOString();
             const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
@@ -183,7 +183,7 @@ class TailwindPrefixBot {
             // Read and write backup
             const content = await fs.readFile(filePath, 'utf8');
             await fs.writeFile(backupPath, content, 'utf8');
-            
+
             this.log('debug', `Backup created: ${backupPath}`);
             return backupPath;
         } catch (error) {
@@ -199,9 +199,9 @@ class TailwindPrefixBot {
      */
     async restoreFromBackup(backupTimestamp = null) {
         try {
-            const backupFiles = glob.sync('**/*.backup', { 
-                cwd: this.backupDir, 
-                absolute: true 
+            const backupFiles = glob.sync('**/*.backup', {
+                cwd: this.backupDir,
+                absolute: true
             });
 
             let restoredCount = 0;
@@ -243,7 +243,7 @@ class TailwindPrefixBot {
     isNotTailwindClass(className) {
         // Remove any prefixes and negation for checking
         let classToCheck = className;
-        
+
         // Remove responsive/pseudo prefixes (everything before last :)
         const lastColonIndex = classToCheck.lastIndexOf(':');
         if (lastColonIndex !== -1) {
@@ -262,15 +262,15 @@ class TailwindPrefixBot {
 
         // Check for camelCase (has lowercase followed by uppercase)
         const hasCamelCase = /[a-z][A-Z]/.test(classToCheck);
-        
+
         // Check for snake_case (has underscores not in arbitrary values)
         const hasSnakeCase = classToCheck.includes('_') && !classToCheck.includes('[');
-        
+
         // Check for common non-Tailwind patterns
         const isCustomClass = /^[A-Z]/.test(classToCheck) || // Starts with uppercase
-                             classToCheck.includes('__') ||  // BEM methodology
-                             /^\d/.test(classToCheck) ||     // Starts with number
-                             classToCheck.length < 2;       // Too short
+            classToCheck.includes('__') ||  // BEM methodology
+            /^\d/.test(classToCheck) ||     // Starts with number
+            classToCheck.length < 2;       // Too short
 
         // Check for framework-specific classes
         const isFrameworkClass = /^(ng-|v-|data-|aria-|role-)/.test(classToCheck);
@@ -349,11 +349,11 @@ class TailwindPrefixBot {
             let deletedCount = 0;
 
             // Clean old-style .backup files in source directory
-            const oldBackupFiles = glob.sync('**/*.backup', { 
-                cwd: this.sourceDir, 
-                absolute: true 
+            const oldBackupFiles = glob.sync('**/*.backup', {
+                cwd: this.sourceDir,
+                absolute: true
             });
-            
+
             for (const file of oldBackupFiles) {
                 try {
                     await fs.unlink(file);
@@ -366,11 +366,11 @@ class TailwindPrefixBot {
 
             // Clean new-style backup directory
             if (await this.checkDirectoryAccess(this.backupDir)) {
-                const backupFiles = glob.sync('**/*.backup', { 
-                    cwd: this.backupDir, 
-                    absolute: true 
+                const backupFiles = glob.sync('**/*.backup', {
+                    cwd: this.backupDir,
+                    absolute: true
                 });
-                
+
                 for (const file of backupFiles) {
                     try {
                         await fs.unlink(file);
@@ -407,7 +407,7 @@ class TailwindPrefixBot {
      */
     processHtmlClasses(content) {
         let changeCount = 0;
-        
+
         const result = content.replace(
             this.patterns.htmlClass,
             (match, classString) => {
@@ -431,14 +431,6 @@ class TailwindPrefixBot {
     // Process CSS class selectors
     processCssClasses(content) {
         return content;
-
-        // return content.replace(
-        //   /\.([a-zA-Z][\w\-\:!\[\]]*)/g,
-        //   (match, className) => {
-        //     const processedClass = this.addPrefixToClass(className);
-        //     return '.' + processedClass;
-        //   }
-        // );
     }
 
     // Add prefix to CSS class selectors (outside @apply)
@@ -447,7 +439,7 @@ class TailwindPrefixBot {
         return content.replace(
             /(?<=^|[\s,{])\.([a-zA-Z0-9_-]+)/gm,
             (match, className) => {
-                // Ignore classes in ignore list
+                // Corrected property name
                 if (this.ignoreClasses.includes(className)) return match;
 
                 // Already prefixed
