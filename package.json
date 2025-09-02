@@ -24,12 +24,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/tailwind-prefix-bot.git"
+    "url": "git+https://github.com/NarekMeliksetyan/tailwind-prefix-bot.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/tailwind-prefix-bot/issues"
+    "url": "https://github.com/NarekMeliksetyan/tailwind-prefix-bot/issues"
   },
-  "homepage": "https://github.com/your-username/tailwind-prefix-bot#readme",
+  "homepage": "https://github.com/NarekMeliksetyan/tailwind-prefix-bot#readme",
   "engines": {
     "node": ">=14"
   },

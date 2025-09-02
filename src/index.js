@@ -448,7 +448,7 @@ class TailwindPrefixBot {
             /(?<=^|[\s,{])\.([a-zA-Z0-9_-]+)/gm,
             (match, className) => {
                 // Ignore classes in ignore list
-                if (this.ignoreClass.includes(className)) return match;
+                if (this.ignoreClasses.includes(className)) return match;
 
                 // Already prefixed
                 if (className.startsWith(this.prefix)) return match;
