@@ -1,0 +1,39 @@
+{
+  "name": "tailwind-prefix-bot",
+  "version": "1.0.0",
+  "description": "A CLI tool to add prefixes to all Tailwind classes in your project files.",
+  "main": "src/index.js",
+  "bin": {
+    "tailwind-prefixify": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "test": "node bin/cli.js --test",
+    "help": "node bin/cli.js --help"
+  },
+  "keywords": [
+    "tailwindcss",
+    "prefix",
+    "cli",
+    "automation"
+  ],
+  "author": "NAREK MELIKSETYAN",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/tailwind-prefix-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/tailwind-prefix-bot/issues"
+  },
+  "homepage": "https://github.com/your-username/tailwind-prefix-bot#readme",
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "glob": "^7.2.3"
+  }
+}
